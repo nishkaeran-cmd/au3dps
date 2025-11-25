@@ -18,11 +18,13 @@ wss.on("connection", (ws) => {
       if (data.cmd === "handshake") {
         console.log("Handshake received:", data);
 
-        // Send confirmation back
+        // CloudLink requires echoing back the listener field
         const reply = {
           cmd: "handshake",
-          val: { ok: true }
+          val: { ok: true },
+          listener: data.listener
         };
+
         ws.send(JSON.stringify(reply));
         console.log("Handshake reply sent:", reply);
       }
