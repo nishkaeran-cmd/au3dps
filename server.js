@@ -2,6 +2,7 @@
 const WebSocket = require("ws");
 const PORT = process.env.PORT || 3000;
 
+// Create WebSocket server
 const wss = new WebSocket.Server({ port: PORT }, () => {
   console.log(`WebSocket server running on port ${PORT}`);
 });
@@ -13,13 +14,20 @@ wss.on("connection", (ws) => {
     try {
       const data = JSON.parse(msg);
 
+      // Handle handshake
       if (data.cmd === "handshake") {
         console.log("Handshake received:", data);
-        ws.send(JSON.stringify({
+
+        // Send confirmation back
+        const reply = {
           cmd: "handshake",
           val: { ok: true }
-        }));
+        };
+        ws.send(JSON.stringify(reply));
+        console.log("Handshake reply sent:", reply);
       }
+
+      // Add other command handlers here if needed
     } catch (err) {
       console.error("Invalid message:", msg);
     }
